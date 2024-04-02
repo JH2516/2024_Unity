@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEditor;
 
@@ -17,7 +18,7 @@ public class StaticMeshGenEditor : Editor
     }
 }
 
-public class Button : MonoBehaviour
+public class StaticMeshGen : MonoBehaviour
 {
     // Start is called before the first frame update
     void GenerateMesh()
