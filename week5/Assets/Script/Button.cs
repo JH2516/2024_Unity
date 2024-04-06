@@ -120,6 +120,7 @@ public class StaticMeshGen : MonoBehaviour
 
         MeshFilter mf = this.AddComponent<MeshFilter>();
         MeshRenderer mr = this.AddComponent<MeshRenderer>();
+        mr.material.color = Color.yellow;
 
         mf.mesh = mesh;
     }
