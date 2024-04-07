@@ -55,54 +55,80 @@ public class StaticMeshGen : MonoBehaviour
         };
 
         mesh.vertices = vertices;
-
+        //¶Ñ²±
         int[] starBuildingVerteciesUp = new int[]
         {
-            1,2,3,4,5,6,7,8,9,10,
+            1,2,10,
+            2,3,4,
+            4,5,6,
+            6,7,8,
+            8,9,10,
+            2,10,8,
+            2,4,8,
+            4,6,8,
         };
-        int[] starBuildingVertecisDown = new int[]
+        //¹Ù´Ú
+        int[] starBuildingVerteciesDown = new int[]
         {
-            11,12,13,14,15,16,17,18,19,20,
+            11,12,20,
+            12,13,14,
+            14,15,16,
+            16,17,18,
+            18,19,20,
+            12,20,18,
+            12,14,18,
+            14,16,18,
         };
+        //¿·¸éµé
         int[] starBuildingVertecisSide1 = new int[]
         {
-            1,2,11,12,
+            1,2,11,
+            2,11,12,
         };
         int[] starBuildingVertecisSide2 = new int[]
         {
-            2,3,12,13,
+            2,3,12,
+            3,12,13,
         };
         int[] starBuildingVertecisSide3 = new int[]
         {
-            3,4,13,14,
+            3,4,13,
+            4,13,14,
         };
         int[] starBuildingVertecisSide4 = new int[]
         {
-            4,5,14,15,
+            4,5,14,
+            5,14,15,
         };
         int[] starBuildingVertecisSide5 = new int[]
         {
-            5,6,15,16,
+            5,6,15,
+            6,15,16,
         };
         int[] starBuildingVertecisSide6 = new int[]
         {
-            6,7,16,17,
+            6,7,16,
+            7,16,17,
         };
         int[] starBuildingVertecisSide7 = new int[]
         {
-            7,8,17,18,
+            7,8,17,
+            8,17,18,
         };
         int[] starBuildingVertecisSide8 = new int[]
         {
-            8,9,18,19,
+            8,9,18,
+            9,18,19,
         };
         int[] starBuildingVertecisSide9 = new int[]
         {
-            9,10,19,20,
+            9,10,19,
+            10,19,20,
         };
         int[] starBuildingVertecisSide10 = new int[]
         {
-            10,1,20,11,
+            10,1,20,
+            1,20,11,
         };
         int[] starBuildingIndices = new int[12];
         starBuildingIndices[0] = starBuildingVerteciesUp;
