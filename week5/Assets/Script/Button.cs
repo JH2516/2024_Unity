@@ -132,7 +132,7 @@ public class StaticMeshGen : MonoBehaviour
         };
         int[] starBuildingIndices = new int[12];
         starBuildingIndices[0] = starBuildingVerteciesUp;
-        starBuildingIndices[1] = starBuildingVertecisDown;
+        starBuildingIndices[1] = starBuildingVerteciesDown;
         starBuildingIndices[2] = starBuildingVertecisSide1;
         starBuildingIndices[3] = starBuildingVertecisSide2;
         starBuildingIndices[4] = starBuildingVertecisSide3;
