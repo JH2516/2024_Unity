@@ -28,6 +28,8 @@ public class StaticMeshGen : MonoBehaviour
 
         Vector3[] vertices = new Vector3[]
         {
+            //배열 잘못짬, 귀찮아서 임의로 추가
+            new Vector3 (0.0f, 0.0f, 0.0f), //사용할일 없음
             //윗면
             new Vector3 (Math.Cos(18), 0.0f, Math.Sin(18)),
             new Vector3((0.5*Math.Cos(54)), 0.0f,((0.5* Math.Sin(54))),
