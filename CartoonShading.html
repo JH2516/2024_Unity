@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+			renderer.setClearColor(new THREE.Color(1, 1, 0));
+
+			//const geometry = new THREE.CylinderGeometry( 1, 1, 1, 32 ); 
+			const geometry = new THREE.SphereGeometry(1, 32, 32);
+
+			var vShader = document.getElementById('vertexShader').innerHTML;
+			var fShader = document.getElementById('fragmentShader').innerHTML;
+
+			const material = new THREE.ShaderMaterial({
+				vertexShader: vShader,
+				fragmentShader: fShader
+			});
+
+			const cube = new THREE.Mesh(geometry, material);
+			scene.add(cube);
+
+			camera.position.z = 5;
+
+			function animate() {
+				requestAnimationFrame(animate);
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render(scene, camera);
+			}
+
+			animate();
+		</script>
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+			varying vec3 vNormal; //vNormal(법선 벡터)를 선언
+			varying vec3 vViewPosition; //카메라에서 보이는 view의 위치(position)
+
+			void main() {
+				vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); //모델 뷰 메트릭스(4차 행렬)에 포지션(3차행렬)과 1.0을 사용해 4차로 만든 벡터를 곱하여 모델뷰 포지션 저장)
+				gl_Position = projectionMatrix * mvPosition; //모델 뷰 포지션에 투영행렬(원근법) 곱해서 나온 결과를 1 ~ -1 사이의 클립좌표로 저장
+				vNormal = normalMatrix * normal; //계산된 법선 벡터를 월드 좌표로 변환후 저장
+				vViewPosition = -mvPosition.xyz; //카메라는 보통 0,0,0에 있기에 계산된 좌표를 음수로 변환해 카메라에 보이게 한다
+			}
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+			varying vec3 vNormal; //법선 벡터
+			varying vec3 vViewPosition; //뷰포지션
+
+			void main() {
+				vec3 normal = normalize(vNormal); //법선 벡터 단위 벡터로 변환
+				vec3 viewDir = normalize(vViewPosition); //뷰포지션 단위 벡터로 변환
+				vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0)); //광원에서 표면으로 향하는 벡터(1,1,1)을 단위 벡터로 변환
+				//ambient(주변광)
+				float ambientStrength = 0.2; //주변광 0.2로 세팅
+				vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0); //빛의 벡터와 곱해서 주변광을 저장
+				//diffuse(빛의 입사각 계산)
+				float diff = max(dot(normal, lightDir), 0.0); //정규화된 법선 벡터와 정규화된 빛의 벡터를 내적하고 두 벡터간의 각을 계산한다, 그 후 max를 통해 그 값이 양수면 내적 값을 diff에 저장, 음수면 0을 저장
+				vec3 diffuse = diff * vec3(1.0, 0.0, 0.0); //RGB값을 0~1로 나타낸 값(여기선 1,0,0이니 빨간색)을 diff값에 곱하여 빛이 들어오는 강도를 계산
+				//specular(반사광)
+				vec3 reflectDir = reflect(-lightDir, normal); //lightDir를 음수로 사용하여 반사되어 나오는 각도를 받고 법선 단위 벡터를 사용하여 reflect 함수로 반사광을 계산한다
+				float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); //카메라에서 표면을 향하는 벡터와 반사 벡터의 각을 내적해 음수면 0을, 양수면 내적값을 가져가서 32제곱으로 값을 크게 만든다(이때 지수가 클 수록 더 반사광이 크고 작을 수록 반사광이 작다)
+				vec3 specular = vec3(0.5) * spec;//회색(0.5) 값을 최종 스펙큘러 값에 곱해 강도를 반토막 낸다(조명 강도를 맞추기 위한 과정)
+
+				vec3 result = (ambient + diffuse + specular);//구한 주변광, 입사광, 반사광 전부 합치기
+				//vec3 result = (specular);
+				//vec3 result = (diffuse);
+
+				// Apply a step function to create discrete shading bands(카툰 쉐이딩을 위한 과정, 결과값을 0.4단위로 잘라서 출력한다)
+				float threshold = 0.4; //픽셀의 값이 0.4이상이면 지정한 값보다 밝게, 낮으면 어둡게 하기 위한 임계값
+				vec3 banding = floor(result / threshold); //결과값을 임계값으로 나눈 후 정수 부분만 남겨 색상 층을 단순화하기 위한 과정
+				vec3 finalIntensity = banding * threshold; //단순화된 과정과 임계값을 곱해 색상을 맞추는 과정
+				
+				//gl_FragColor = vec4(finalIntensity.x, finalIntensity.y, finalIntensity.z, 1.0); //각 색상의 RGB값과 투명도(1.0)을 설정, cartoon shading 전용
+
+				gl_FragColor = vec4(result, 1.0);//phong shading 전용
+			}
+		</script>
+	</body>
+</html>
