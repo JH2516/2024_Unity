@@ -684,6 +684,105 @@ Frustum Culling (프러스텀 컬링):
 
 프러스텀은 게임 개발에서 렌더링 최적화 및 시야 관리에 중요한 개념이며, 화면에 표시되는 객체를 제어하는 데 사용됩니다.
 
+User
+여러개의 무작위 위치를 가진 오브젝트가 카메라의 시야 안에 있는지 확인하는 공식을 알려주고 예제를 만들어줘
+ChatGPT
+카메라의 시야 안에 있는지 여부를 확인하는 가장 간단한 방법은 각 오브젝트의 위치를 카메라의 프러스텀 안에 있는지 확인하는 것입니다. 이를 위해 Unity에서는 GeometryUtility.TestPlanesAABB() 메서드를 제공합니다. 이 메서드를 사용하여 각 오브젝트의 AABB(Axis-Aligned Bounding Box)와 카메라의 프러스텀을 비교하여 시야 안에 있는지 여부를 판단할 수 있습니다.
+
+예시 코드:
+csharp
+Copy code
+using UnityEngine;
+
+public class ObjectVisibility : MonoBehaviour
+{
+    public Camera mainCamera;
+
+    void Update()
+    {
+        // 모든 오브젝트들의 위치를 가져옴
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Object");
+
+        // 카메라의 프러스텀을 가져옴
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(mainCamera);
+
+        foreach (GameObject obj in objects)
+        {
+            // 오브젝트의 AABB를 가져옴
+            Bounds bounds = obj.GetComponent<Renderer>().bounds;
+
+            // 오브젝트가 프러스텀 안에 있는지 여부를 검사
+            bool isVisible = GeometryUtility.TestPlanesAABB(planes, bounds);
+
+            if (isVisible)
+            {
+                Debug.Log(obj.name + " is visible!");
+            }
+            else
+            {
+                Debug.Log(obj.name + " is not visible!");
+            }
+        }
+    }
+}
+설명:
+Camera mainCamera:
+카메라의 프러스텀을 계산하기 위해 사용됩니다. 유니티 에디터에서 해당 카메라를 지정해주어야 합니다.
+GameObject.FindGameObjectsWithTag("Object"):
+"Object" 태그를 가진 모든 오브젝트를 가져옵니다.
+GeometryUtility.CalculateFrustumPlanes(mainCamera):
+카메라의 프러스텀을 계산하여 배열로 반환합니다.
+foreach 루프:
+모든 오브젝트에 대해 반복하여 시야 안에 있는지 검사합니다.
+GeometryUtility.TestPlanesAABB(planes, bounds):
+오브젝트의 AABB와 카메라의 프러스텀을 비교하여 시야 안에 있는지 여부를 판단합니다.
+이 예시 코드를 사용하면 카메라의 시야 안에 있는지 여부를 실시간으로 확인할 수 있습니다. 필요에 따라 이 코드를 수정하여 시야 안에 있는 오브젝트에 대해 특정 동작을 수행하도록 만들 수 있습니다.
 
 
 
+User
+그럼 카메라가 여러개일때는 저 코드를 각 카메라마다 적용시키면 되나?
+ChatGPT
+네, 카메라가 여러 개일 때도 각 카메라마다 위의 코드를 적용시킬 수 있습니다. 각 카메라에 대해 프러스텀을 계산하고, 각각의 프러스텀과 오브젝트의 AABB를 비교하여 시야 안에 있는지 여부를 확인하면 됩니다.
+
+다음은 여러 개의 카메라가 있는 경우 각 카메라에 대해 시야 안에 있는 오브젝트를 검사하는 예시 코드입니다.
+
+csharp
+Copy code
+using UnityEngine;
+
+public class MultipleCameraObjectVisibility : MonoBehaviour
+{
+    public Camera[] cameras;
+
+    void Update()
+    {
+        // 모든 오브젝트들의 위치를 가져옴
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Object");
+
+        foreach (Camera camera in cameras)
+        {
+            // 각 카메라의 프러스텀을 가져옴
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+
+            foreach (GameObject obj in objects)
+            {
+                // 오브젝트의 AABB를 가져옴
+                Bounds bounds = obj.GetComponent<Renderer>().bounds;
+
+                // 오브젝트가 프러스텀 안에 있는지 여부를 검사
+                bool isVisible = GeometryUtility.TestPlanesAABB(planes, bounds);
+
+                if (isVisible)
+                {
+                    Debug.Log(obj.name + " is visible by " + camera.name + "!");
+                }
+                else
+                {
+                    Debug.Log(obj.name + " is not visible by " + camera.name + "!");
+                }
+            }
+        }
+    }
+}
+이렇게 하면 각 카메라의 프러스텀과 오브젝트의 AABB를 비교하여 각 카메라의 시야 안에 있는지 여부를 확인할 수 있습니다.
