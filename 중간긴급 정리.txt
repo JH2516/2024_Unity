@@ -786,3 +786,117 @@ public class MultipleCameraObjectVisibility : MonoBehaviour
     }
 }
 이렇게 하면 각 카메라의 프러스텀과 오브젝트의 AABB를 비교하여 각 카메라의 시야 안에 있는지 여부를 확인할 수 있습니다.
+
+User
+퐁 쉐이딩과 블링 퐁 쉐이딩의 예제를 각각 짜주고 둘의 차이점을 알려줘
+
+ChatGPT
+퐁 쉐이딩과 블링-퐁 쉐이딩은 모두 현실적인 조명과 그림자 효과를 시뮬레이션하기 위해 사용되는 렌더링 기술입니다. 하지만, 블링-퐁 쉐이딩은 퐁 쉐이딩의 확장판으로, 보다 현실적인 반사와 광택 효과를 구현하기 위해 반짝거리는 효과를 추가한 것입니다.
+
+퐁 쉐이딩 예제:
+csharp
+Copy code
+using UnityEngine;
+
+public class PhongShadingExample : MonoBehaviour
+{
+    public Material material;
+
+    void Update()
+    {
+        // 카메라 위치를 가져옴
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+        // 오브젝트의 위치를 가져옴
+        Vector3 objectPosition = transform.position;
+
+        // 빛의 위치를 설정
+        Vector3 lightPosition = new Vector3(5f, 5f, 0f);
+
+        // 빛의 색상
+        Color lightColor = Color.white;
+
+        // 물체의 색상
+        Color objectColor = Color.red;
+
+        // 물체의 표면 법선 벡터 (이 예시에서는 z축 방향을 향하도록 설정)
+        Vector3 normal = new Vector3(0, 0, 1);
+
+        // 빛의 방향 벡터
+        Vector3 lightDirection = (lightPosition - objectPosition).normalized;
+
+        // 빛과 물체의 법선 벡터 사이의 각도 계산
+        float angle = Vector3.Dot(normal, lightDirection);
+
+        // 조명 강도 계산
+        float intensity = Mathf.Clamp01(angle);
+
+        // 빛의 색상과 물체의 색상을 곱하여 최종 색상 계산
+        Color finalColor = lightColor * objectColor * intensity;
+
+        // 물체에 색상 적용
+        material.color = finalColor;
+    }
+}
+블링-퐁 쉐이딩 예제:
+csharp
+Copy code
+using UnityEngine;
+
+public class BlinnPhongShadingExample : MonoBehaviour
+{
+    public Material material;
+
+    void Update()
+    {
+        // 카메라 위치를 가져옴
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+        // 오브젝트의 위치를 가져옴
+        Vector3 objectPosition = transform.position;
+
+        // 빛의 위치를 설정
+        Vector3 lightPosition = new Vector3(5f, 5f, 0f);
+
+        // 빛의 색상
+        Color lightColor = Color.white;
+
+        // 물체의 색상
+        Color objectColor = Color.red;
+
+        // 물체의 표면 법선 벡터 (이 예시에서는 z축 방향을 향하도록 설정)
+        Vector3 normal = new Vector3(0, 0, 1);
+
+        // 빛의 방향 벡터
+        Vector3 lightDirection = (lightPosition - objectPosition).normalized;
+
+        // 뷰 방향 벡터
+        Vector3 viewDirection = (cameraPosition - objectPosition).normalized;
+
+        // 반사 방향 벡터 계산
+        Vector3 halfVector = (lightDirection + viewDirection).normalized;
+
+        // 빛과 물체의 법선 벡터 사이의 각도 계산
+        float diffuse = Mathf.Max(0f, Vector3.Dot(normal, lightDirection));
+
+        // 스페큘러 강도 계산
+        float specular = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(normal, halfVector)), 50f);
+
+        // 조명 강도 계산
+        float intensity = diffuse + specular;
+
+        // 빛의 색상과 물체의 색상을 곱하여 최종 색상 계산
+        Color finalColor = lightColor * objectColor * intensity;
+
+        // 물체에 색상 적용
+        material.color = finalColor;
+    }
+}
+퐁 쉐이딩과 블링-퐁 쉐이딩의 차이점:
+퐁 쉐이딩:
+물체의 표면을 조명과 그림자의 간단한 모델로 나타냅니다.
+조명의 강도에 따라 물체의 밝기가 변화하고, 그림자가 생성됩니다.
+블링-퐁 쉐이딩:
+퐁 쉐이딩에 스페큘러(highlight) 효과를 추가한 것입니다.
+빛이 물체의 표면에서 반사되는 광택 효과를 시뮬레이션하여 물체의 현실적인 느낌을 높입니다.
+퐁 쉐이딩과 블링-퐁 쉐이딩은 모두 빛의 반사와 그림자를 시뮬레이션하여 물체를 더 자연스럽게 표현하는 것이 목표입니다. 하지만 블링-퐁 쉐이딩은 훨씬 더 현실적인 광택 효과를 제공하여 물체의 외형을 더욱 생생하게 만듭니다.
