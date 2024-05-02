@@ -13,7 +13,7 @@
 ### TRS는 transform의 컴포넌트 안에 있는 요소들을 변환하는 4*4 행렬로, 각각 Translation (위치), Rotation (회전), Scale (크기)를 나타낸다.
 
 ### Translation 행렬
-$\begin{pmatrix}1&0&0&t_x\\0&1&0&t_y\\0&0&1&t_z\\0&0&0&1\\ \end{pmatrix}$
+$\begin{pmatrix}1 & 0 & 0 & t_x\\0 & 1 & 0 & t_y\\0&0&1&t_z\\0&0&0&1\end{pmatrix}$
 
 ### Rotation 행렬은 x,y,z 총 3개의 기준 축에 대한 행렬이 있다.
 
