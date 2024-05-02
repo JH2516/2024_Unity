@@ -18,7 +18,7 @@ $\begin{pmatrix}1 & 0 & 0 & t_x\\0 & 1 & 0 & t_y\\0&0&1&t_z\\0&0&0&1\end{pmatrix
 ### Rotation 행렬은 x,y,z 총 3개의 기준 축에 대한 행렬이 있다.
 
 #### Rotation 행렬 (x축 기준 회전)
-$\begin{bmatrix}1&0&0&0\\0&cos\theta&-sin\theta&0\\0&sin\theta&cos\theta&0\\0&0&0&1\\ \end{bmatrix}$
+$\begin{pmatrix}1&0&0&0\\0&cos\theta&-sin\theta&0\\0&sin\theta&cos\theta&0\\0&0&0&1\\ \end{pmatrix}$
 
 #### Rotation 행렬 (y축 기준 회전)
 $\begin{pmatrix}cos\theta&0&sin\theta&0\\0&1&0&0\\-sin\theta&0&cos\theta&0\\0&0&01\\ \end{pmatrix}$
