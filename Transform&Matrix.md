@@ -76,7 +76,8 @@ Matrix4x4 matrixB = new Matrix4x4(
 #### Matrix4x4를 사용할때는 곱셈으로, Vector3나 Euler를 사용할때는 4x4 행렬로 변환해서 연산한다.
 ##### Matrix4x4 곱셈 사용 예시
 <pre><code>Matrix4x4 MultipliedMatrix = matrixA * matrixB;</pre></code>
-### 4x4 행렬의 곱셈 (내적)
+### 4x4 행렬의 곱셈 (내적의 반복)
+#### 내적은 두 벡터를 곱하여 하나의 값(scalar)를 도출하는 과정
 #### 행렬의 곱셈은 곱해지는 1번 Matrix의 가로 길이와 곱하는 2번 Matrix의 세로 길이가 동일할때만 가능하다.
 #### 행렬 곱셈 과정
 <pre><code>for (int i = 0; i < 4; i++)
