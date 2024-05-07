@@ -1,4 +1,4 @@
-# TRS Matrix culc.
+# Transform Matrix culc.
 
 ## What is Transform?
 
@@ -16,15 +16,17 @@
 $\begin{pmatrix}1 & 0 & 0 & t_x\\0 & 1 & 0 & t_y\\0&0&1&t_z\\0&0&0&1\end{pmatrix}$
 
 ### Rotation 행렬은 x,y,z 총 3개의 기준 축에 대한 행렬이 있다.
+### Rotation 행렬의 기준축을 하나만 두고 생각하면 그 축을 제외한 나머지 수치들에 대한 2차원 회전 행렬이다.
+##### R은 벡터의 크기
 
 #### Rotation 행렬 (x축 기준 회전)
-$\begin{pmatrix}1&0&0&0\\0&cos\theta&-sin\theta&0\\0&sin\theta&cos\theta&0\\0&0&0&1\\ \end{pmatrix}$
+$\begin{pmatrix}1&0&0&0\\0&Rcos\theta&-Rsin\theta&0\\0&Rsin\theta&Rcos\theta&0\\0&0&0&1\\ \end{pmatrix}$
 
 #### Rotation 행렬 (y축 기준 회전)
-$\begin{pmatrix}cos\theta&0&sin\theta&0\\0&1&0&0\\-sin\theta&0&cos\theta&0\\0&0&01\\ \end{pmatrix}$
+$\begin{pmatrix}Rcos\theta&0&Rsin\theta&0\\0&1&0&0\\-Rsin\theta&0&Rcos\theta&0\\0&0&0&1\\ \end{pmatrix}$
 
 #### Rotation 행렬 (z축 기준 회전)
-$\begin{pmatrix}cos\theta&-sin\theta&0&0\\\sin\theta&cos\theta&0&0\\0&0&1&0\\0&0&0&1\\ \end{pmatrix}$
+$\begin{pmatrix}Rcos\theta&-Rsin\theta&0&0\\Rsin\theta&Rcos\theta&0&0\\0&0&1&0\\0&0&0&1\\ \end{pmatrix}$
 
 ##### Rotation 행렬은 기준 축이 z,y,x 순서로 계산되어 합산된다.
 
@@ -90,6 +92,11 @@ Matrix4x4 matrixB = new Matrix4x4(
 }</code></pre>
 #### 행렬의 i번째 가로줄의 j번째 세로줄 위치의 요소는 위의 공식으로 계산된다.
 ---
+
+
+
+
+
 
 ##### 후기
 ###### 마크다운 문법을 사용해서 문서를 작성해본 경험은 처음이지만 chat gpt에서 행렬을 표시하기 직전에 잠깐 뜨는 문법, 디스코드에서 텍스트로 다양한 형식을 표현하는 방법 등 생각보다 많은 곳에서 활용되고 있는 것을 확인했다. 이번 기회를 통해 마크다운 문법에 대한 경험이 늘어 좋다고 생각한다.
